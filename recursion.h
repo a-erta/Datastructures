@@ -2,7 +2,7 @@
  * recursion.h
  *
  *  Created on: Jan 2, 2016
- *      Author: alessandroerta
+ *      Author: alessandroerta-1
  */
 
 #ifndef RECURSION_H_

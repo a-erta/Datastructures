@@ -386,6 +386,4 @@ bool PriorityQueue<T>::update(T val, T new_val) {
 	return false;
 }
 
-
-
 #endif /* TREE_H_ */

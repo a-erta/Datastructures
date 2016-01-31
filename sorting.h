@@ -9,24 +9,8 @@
 #define SORTING_H_
 
 #include <vector>
-
-template <class T>
-class Comparator {
-public:
-	Comparator(){};
-	virtual bool compare(T a, T b) = 0;
-	virtual ~Comparator(){};
-};
-
-class IntComparator : public Comparator<int> {
-	int ordering;
-public:
-	enum ORDER {ASC, DESC};
-	IntComparator() : ordering(ORDER::ASC) {}
-	IntComparator(ORDER ord) { ordering = ord; }
-	bool compare(int a, int b) { return (ordering == ORDER::ASC) ? a > b : b > a; }
-	~IntComparator(){}
-};
+#include "comparators.h"
+#include "heap.h"
 
 template <class T>
 class Sorting {
@@ -39,6 +23,7 @@ public:
 	static void quicksort(std::vector<T> &toSort, Comparator<T> *comp);
 	static void selectionSort(std::vector<T> &toSort, Comparator<T> *comp);
 	static void mergesort(std::vector<T> &toSort, Comparator<T> *comp);
+	static void heapsort(std::vector<T> &toSort, Comparator<T> *comp);
 };
 
 template <class T>
@@ -121,7 +106,7 @@ void Sorting<T>::quicksort(std::vector<T> &toSort, Comparator<T> *comp) {
 
 template <class T>
 void Sorting<T>::quicksort(std::vector<T> &toSort, Comparator<T> *comp, int left, int right) {
-	T pivotValue = toSort[ (right + left) / 2];
+	T pivotValue = toSort[ (right + left) / 2 ];
 	int i = left;
 	int j = right;
 
@@ -142,6 +127,14 @@ void Sorting<T>::quicksort(std::vector<T> &toSort, Comparator<T> *comp, int left
 
 	if ( left < j ) quicksort(toSort, comp, left, j);
 	if ( i < right ) quicksort(toSort, comp, i, right);
+}
+
+template <class T>
+void Sorting<T>::heapsort(std::vector<T> &toSort, Comparator<T> *comp) {
+	Heap<T> heap(Heap<T>::MAX_HEAP, false, comp);
+	heap.fromArray(toSort);
+	heap.heapSort();
+	toSort = heap.toArray();
 }
 
 

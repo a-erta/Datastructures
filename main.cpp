@@ -9,7 +9,10 @@
 #include "sorting.h"
 #include "recursion.h"
 #include "utils.h"
+#include "heap.h"
 #include <chrono>
+
+#define ARRAY_SIZE 15
 
 int main() {
 	auto print = [](int y) { std::cout << y << std::endl; };
@@ -17,20 +20,57 @@ int main() {
 
 	std::vector<int> array;
 
-	for (int i = 0; i < 5; i++) {
-		array.push_back(rand() % 5);
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		array.push_back(rand() % ARRAY_SIZE);
 	}
 
+	std::vector<int> array2(ARRAY_SIZE);
+	std::vector<int> array3(ARRAY_SIZE);
+	std::vector<int> array4(ARRAY_SIZE);
+
 	std::cout << "Original:" << std::endl;
+	if (ARRAY_SIZE < 20) printVector(array);
 
-	Sorting<int>::quicksort(array, new IntComparator());
-	//Sorting<int>::selectionSort(array, new IntComparator());
-	//Sorting<int>::mergesort(array, new IntComparator());
-	//std::sort(array.begin(), array.end());
+	std::copy(array.begin(), array.end(), array2.begin());
+	std::copy(array.begin(), array.end(), array3.begin());
+	std::copy(array.begin(), array.end(), array4.begin());
 
-	std::cout << "Sorted:" << std::endl;
+	{	// heap and heapsorting
+		std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+		Sorting<int>::heapsort(array, new IntComparator());
+		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+		std::cout << "HEAPSORT exec time: " << duration << std::endl;
+		if (ARRAY_SIZE < 20) printVector(array);
+	}
 
-	//printVector(array);
+	{ 	// quicksort
+		std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+		Sorting<int>::quicksort(array2, new IntComparator());
+		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+		std::cout << "QUICKSORT exec time: " << duration << std::endl;
+		if (ARRAY_SIZE < 20) printVector(array2);
+	}
+
+	{	// mergesort
+		std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+		Sorting<int>::mergesort(array3, new IntComparator());
+		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+		std::cout << "MERGESORT exec time: " << duration << std::endl;
+		if (ARRAY_SIZE < 20) printVector(array3);
+	}
+
+	{	// selection sort
+		std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+		Sorting<int>::selectionSort(array4, new IntComparator());
+		std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+		std::cout << "SELECTIONSORT exec time: " << duration << std::endl;
+		if (ARRAY_SIZE < 20) printVector(array4);
+	}
+
 	int n = -345576;
 	std::cout << "num Ones in " << n << " => " << numOnes(n) << std::endl;
 
